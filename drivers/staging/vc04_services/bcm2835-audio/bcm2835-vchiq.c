@@ -89,15 +89,15 @@ static int bcm2835_audio_send_simple(struct bcm2835_audio_instance *instance,
 	return bcm2835_audio_send_msg(instance, &m, wait);
 }
 
-static enum vchiq_status audio_vchi_callback(enum vchiq_reason reason,
-					     struct vchiq_header *header,
-					     unsigned int handle, void *userdata)
+static int audio_vchi_callback(enum vchiq_reason reason,
+			       struct vchiq_header *header,
+			       unsigned int handle, void *userdata)
 {
 	struct bcm2835_audio_instance *instance = vchiq_get_service_userdata(handle);
 	struct vc_audio_msg *m;
 
 	if (reason != VCHIQ_MESSAGE_AVAILABLE)
-		return VCHIQ_SUCCESS;
+		return 0;
 
 	m = (void *)header->data;
 	if (m->type == VC_AUDIO_MSG_TYPE_RESULT) {
@@ -115,7 +115,7 @@ static enum vchiq_status audio_vchi_callback(enum vchiq_reason reason,
 	}
 
 	vchiq_release_message(handle, header);
-	return VCHIQ_SUCCESS;
+	return 0;
 }
 
 static int

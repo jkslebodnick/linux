@@ -722,9 +722,9 @@ void free_bulk_waiter(struct vchiq_instance *instance)
 	}
 }
 
-enum vchiq_status vchiq_shutdown(struct vchiq_instance *instance)
+int vchiq_shutdown(struct vchiq_instance *instance)
 {
-	enum vchiq_status status = VCHIQ_SUCCESS;
+	int status = 0;
 	struct vchiq_state *state = instance->state;
 
 	if (mutex_lock_killable(&state->mutex))

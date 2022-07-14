@@ -458,8 +458,9 @@ vchiq_init_slots(void *mem_base, int mem_size);
 extern int
 vchiq_init_state(struct vchiq_state *state, struct vchiq_slot_zero *slot_zero, struct device *dev);
 
-extern enum vchiq_status
-vchiq_connect_internal(struct vchiq_state *state, struct vchiq_instance *instance);
+extern int
+vchiq_connect_internal(struct vchiq_state *state,
+		       struct vchiq_instance *instance);
 
 struct vchiq_service *
 vchiq_add_service_internal(struct vchiq_state *state,

@@ -2834,8 +2834,9 @@ vchiq_free_service_internal(struct vchiq_service *service)
 	vchiq_service_put(service);
 }
 
-enum vchiq_status
-vchiq_connect_internal(struct vchiq_state *state, struct vchiq_instance *instance)
+int
+vchiq_connect_internal(struct vchiq_state *state,
+		       struct vchiq_instance *instance)
 {
 	struct vchiq_service *service;
 	int i;
@@ -2851,20 +2852,20 @@ vchiq_connect_internal(struct vchiq_state *state, struct vchiq_instance *instanc
 	if (state->conn_state == VCHIQ_CONNSTATE_DISCONNECTED) {
 		if (queue_message(state, NULL, MAKE_CONNECT, NULL, NULL, 0,
 				  QMFLAGS_IS_BLOCKING) == VCHIQ_RETRY)
-			return VCHIQ_RETRY;
+			return -EAGAIN;
 
 		vchiq_set_conn_state(state, VCHIQ_CONNSTATE_CONNECTING);
 	}
 
 	if (state->conn_state == VCHIQ_CONNSTATE_CONNECTING) {
 		if (wait_for_completion_interruptible(&state->connect))
-			return VCHIQ_RETRY;
+			return -EAGAIN;
 
 		vchiq_set_conn_state(state, VCHIQ_CONNSTATE_CONNECTED);
 		complete(&state->connect);
 	}
 
-	return VCHIQ_SUCCESS;
+	return 0;
 }
 
 void

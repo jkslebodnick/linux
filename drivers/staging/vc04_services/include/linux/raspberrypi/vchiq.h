@@ -57,11 +57,11 @@ struct vchiq_instance;
 
 struct vchiq_service_base {
 	int fourcc;
-	enum vchiq_status (*callback)(struct vchiq_instance *instance,
-				      enum vchiq_reason reason,
-				      struct vchiq_header *header,
-				      unsigned int handle,
-				      void *bulk_userdata);
+	int (*callback)(struct vchiq_instance *instance,
+			enum vchiq_reason reason,
+			struct vchiq_header *header,
+			unsigned int handle,
+			void *bulk_userdata);
 	void *userdata;
 };
 
@@ -74,11 +74,11 @@ struct vchiq_completion_data_kernel {
 
 struct vchiq_service_params_kernel {
 	int fourcc;
-	enum vchiq_status (*callback)(struct vchiq_instance *instance,
-				      enum vchiq_reason reason,
-				      struct vchiq_header *header,
-				      unsigned int handle,
-				      void *bulk_userdata);
+	int (*callback)(struct vchiq_instance *instance,
+			enum vchiq_reason reason,
+			struct vchiq_header *header,
+			unsigned int handle,
+			void *bulk_userdata);
 	void *userdata;
 	short version;       /* Increment for non-trivial changes */
 	short version_min;   /* Update for incompatible changes */

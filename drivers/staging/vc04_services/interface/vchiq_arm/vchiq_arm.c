@@ -1695,11 +1695,11 @@ vchiq_dump_service_use_state(struct vchiq_state *state)
 	kfree(service_data);
 }
 
-enum vchiq_status
+int
 vchiq_check_service(struct vchiq_service *service)
 {
 	struct vchiq_arm_state *arm_state;
-	enum vchiq_status ret = VCHIQ_ERROR;
+	int ret = -EINVAL;
 
 	if (!service || !service->state)
 		goto out;
@@ -1708,10 +1708,10 @@ vchiq_check_service(struct vchiq_service *service)
 
 	read_lock_bh(&arm_state->susp_res_lock);
 	if (service->service_use_count)
-		ret = VCHIQ_SUCCESS;
+		ret = 0;
 	read_unlock_bh(&arm_state->susp_res_lock);
 
-	if (ret == VCHIQ_ERROR) {
+	if (ret) {
 		vchiq_log_error(vchiq_susp_log_level,
 				"%s ERROR - %c%c%c%c:%d service count %d, state count %d", __func__,
 				VCHIQ_FOURCC_AS_4CHARS(service->base.fourcc), service->client_id,

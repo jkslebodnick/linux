@@ -91,7 +91,7 @@ vchiq_use_service(struct vchiq_instance *instance, unsigned int handle);
 extern enum vchiq_status
 vchiq_release_service(struct vchiq_instance *instance, unsigned int handle);
 
-extern enum vchiq_status
+extern int
 vchiq_check_service(struct vchiq_service *service);
 
 extern void

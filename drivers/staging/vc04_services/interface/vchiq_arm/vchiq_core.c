@@ -3030,7 +3030,7 @@ enum vchiq_status vchiq_bulk_transfer(struct vchiq_instance *instance, unsigned 
 	if (!offset && !uoffset)
 		goto error_exit;
 
-	if (vchiq_check_service(service) != VCHIQ_SUCCESS)
+	if (vchiq_check_service(service))
 		goto error_exit;
 
 	switch (mode) {
@@ -3177,7 +3177,7 @@ vchiq_queue_message(struct vchiq_instance *instance, unsigned int handle,
 	if (!service)
 		goto error_exit;
 
-	if (vchiq_check_service(service) != VCHIQ_SUCCESS)
+	if (vchiq_check_service(service))
 		goto error_exit;
 
 	if (!size) {
@@ -3288,7 +3288,7 @@ vchiq_get_peer_version(struct vchiq_instance *instance, unsigned int handle, sho
 	if (!service)
 		goto exit;
 
-	if (vchiq_check_service(service) != VCHIQ_SUCCESS)
+	if (vchiq_check_service(service))
 		goto exit;
 
 	if (!peer_version)

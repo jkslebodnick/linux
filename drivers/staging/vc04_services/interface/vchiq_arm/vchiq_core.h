@@ -568,7 +568,7 @@ void vchiq_on_remote_release(struct vchiq_state *state);
 
 int vchiq_platform_init_state(struct vchiq_state *state);
 
-enum vchiq_status vchiq_check_service(struct vchiq_service *service);
+int vchiq_check_service(struct vchiq_service *service);
 
 void vchiq_on_remote_use_active(struct vchiq_state *state);
 

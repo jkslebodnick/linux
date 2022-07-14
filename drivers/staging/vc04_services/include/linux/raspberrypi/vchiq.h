@@ -103,12 +103,14 @@ extern void vchiq_release_message(struct vchiq_instance *instance, unsigned int 
 				  struct vchiq_header *header);
 extern int vchiq_queue_kernel_message(struct vchiq_instance *instance, unsigned int handle,
 				      void *data, unsigned int size);
-extern enum vchiq_status vchiq_bulk_transmit(struct vchiq_instance *instance, unsigned int service,
-					     const void *data, unsigned int size, void *userdata,
-					     enum vchiq_bulk_mode mode);
-extern enum vchiq_status vchiq_bulk_receive(struct vchiq_instance *instance, unsigned int service,
-					    void *data, unsigned int size, void *userdata,
-					    enum vchiq_bulk_mode mode);
+extern int vchiq_bulk_transmit(struct vchiq_instance *instance,
+			       unsigned int service, const void *data,
+			       unsigned int size, void *userdata,
+			       enum vchiq_bulk_mode mode);
+extern int vchiq_bulk_receive(struct vchiq_instance *instance,
+			      unsigned int service, void *data,
+			      unsigned int size, void *userdata,
+			      enum vchiq_bulk_mode mode);
 extern void *vchiq_get_service_userdata(struct vchiq_instance *instance, unsigned int service);
 extern int vchiq_get_peer_version(struct vchiq_instance *instance,
 				  unsigned int handle,

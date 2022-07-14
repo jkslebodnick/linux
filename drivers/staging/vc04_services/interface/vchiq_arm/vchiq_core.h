@@ -537,7 +537,7 @@ vchiq_service_get(struct vchiq_service *service);
 extern void
 vchiq_service_put(struct vchiq_service *service);
 
-extern enum vchiq_status
+extern int
 vchiq_queue_message(struct vchiq_instance *instance, unsigned int handle,
 		    ssize_t (*copy_callback)(void *context, void *dest,
 					     size_t offset, size_t maxsize),
@@ -573,9 +573,9 @@ int vchiq_check_service(struct vchiq_service *service);
 
 void vchiq_on_remote_use_active(struct vchiq_state *state);
 
-enum vchiq_status vchiq_send_remote_use(struct vchiq_state *state);
+int vchiq_send_remote_use(struct vchiq_state *state);
 
-enum vchiq_status vchiq_send_remote_use_active(struct vchiq_state *state);
+int vchiq_send_remote_use_active(struct vchiq_state *state);
 
 void vchiq_platform_conn_state_changed(struct vchiq_state *state,
 				       enum vchiq_connstate oldstate,

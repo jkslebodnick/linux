@@ -88,7 +88,7 @@ vchiq_get_state(void);
 enum vchiq_status
 vchiq_use_service(struct vchiq_instance *instance, unsigned int handle);
 
-extern enum vchiq_status
+extern int
 vchiq_release_service(struct vchiq_instance *instance, unsigned int handle);
 
 extern int
@@ -103,7 +103,7 @@ vchiq_dump_service_use_state(struct vchiq_state *state);
 extern enum vchiq_status
 vchiq_use_internal(struct vchiq_state *state, struct vchiq_service *service,
 		   enum USE_TYPE_E use_type);
-extern enum vchiq_status
+extern int
 vchiq_release_internal(struct vchiq_state *state,
 		       struct vchiq_service *service);
 

@@ -1393,7 +1393,7 @@ vchiq_keepalive_thread_func(void *v)
 		}
 		while (rc--) {
 			status = vchiq_release_service(instance, ka_handle);
-			if (status != VCHIQ_SUCCESS) {
+			if (status) {
 				vchiq_log_error(vchiq_susp_log_level,
 						"%s vchiq_release_service error %d", __func__,
 						status);
@@ -1601,10 +1601,10 @@ vchiq_use_service(struct vchiq_instance *instance, unsigned int handle)
 }
 EXPORT_SYMBOL(vchiq_use_service);
 
-enum vchiq_status
+int
 vchiq_release_service(struct vchiq_instance *instance, unsigned int handle)
 {
-	enum vchiq_status ret = VCHIQ_ERROR;
+	int ret = -EINVAL;
 	struct vchiq_service *service = find_service_by_handle(instance, handle);
 
 	if (service) {

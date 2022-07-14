@@ -3279,10 +3279,11 @@ release_message_sync(struct vchiq_state *state, struct vchiq_header *header)
 	remote_event_signal(&state->remote->sync_release);
 }
 
-enum vchiq_status
-vchiq_get_peer_version(struct vchiq_instance *instance, unsigned int handle, short *peer_version)
+int
+vchiq_get_peer_version(struct vchiq_instance *instance, unsigned int handle,
+		       short *peer_version)
 {
-	enum vchiq_status status = VCHIQ_ERROR;
+	int status = -EINVAL;
 	struct vchiq_service *service = find_service_by_handle(instance, handle);
 
 	if (!service)
@@ -3295,7 +3296,7 @@ vchiq_get_peer_version(struct vchiq_instance *instance, unsigned int handle, sho
 		goto exit;
 
 	*peer_version = service->peer_version;
-	status = VCHIQ_SUCCESS;
+	status = 0;
 
 exit:
 	if (service)

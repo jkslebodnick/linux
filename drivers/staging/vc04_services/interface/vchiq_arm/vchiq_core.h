@@ -586,7 +586,7 @@ void vchiq_set_conn_state(struct vchiq_state *state, enum vchiq_connstate newsta
 
 void vchiq_log_dump_mem(const char *label, u32 addr, const void *void_mem, size_t num_bytes);
 
-enum vchiq_status vchiq_remove_service(struct vchiq_instance *instance, unsigned int service);
+int vchiq_remove_service(struct vchiq_instance *instance, unsigned int service);
 
 int vchiq_get_client_id(struct vchiq_instance *instance, unsigned int service);
 

@@ -192,7 +192,7 @@ static int vchiq_ioc_create_service(struct vchiq_instance *instance,
 		status = vchiq_open_service_internal(service, instance->pid);
 		if (status) {
 			vchiq_remove_service(instance, service->handle);
-			return (status == VCHIQ_RETRY) ?
+			return (status == -EAGAIN) ?
 				-EINTR : -EIO;
 		}
 	}
@@ -598,7 +598,7 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 							   instance, &i))) {
 			status = vchiq_remove_service(instance, service->handle);
 			vchiq_service_put(service);
-			if (status != VCHIQ_SUCCESS)
+			if (status)
 				break;
 		}
 		service = NULL;

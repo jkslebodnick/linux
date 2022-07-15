@@ -2087,7 +2087,7 @@ sync_func(void *v)
 				if (make_service_callback(service, VCHIQ_MESSAGE_AVAILABLE, header,
 							  NULL) == -EAGAIN)
 					vchiq_log_error(vchiq_sync_log_level,
-							"synchronous callback to service %d returns VCHIQ_RETRY",
+							"synchronous callback to service %d returns -EAGAIN",
 							localport);
 			}
 			break;
@@ -2996,7 +2996,7 @@ vchiq_remove_service(struct vchiq_instance *instance, unsigned int handle)
 
 /*
  * This function may be called by kernel threads or user threads.
- * User threads may receive VCHIQ_RETRY to indicate that a signal has been
+ * User threads may receive -EAGAIN to indicate that a signal has been
  * received and the call should be retried after being returned to user
  * context.
  * When called in blocking mode, the userdata field points to a bulk_waiter
@@ -3221,7 +3221,7 @@ int vchiq_queue_kernel_message(struct vchiq_instance *instance, unsigned int han
 					     data, size);
 
 		/*
-		 * vchiq_queue_message() may return VCHIQ_RETRY, so we need to
+		 * vchiq_queue_message() may return -EAGAIN, so we need to
 		 * implement a retry mechanism since this function is supposed
 		 * to block until queued
 		 */

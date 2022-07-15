@@ -728,7 +728,7 @@ int vchiq_shutdown(struct vchiq_instance *instance)
 	struct vchiq_state *state = instance->state;
 
 	if (mutex_lock_killable(&state->mutex))
-		return VCHIQ_RETRY;
+		return -EAGAIN;
 
 	/* Remove all services */
 	vchiq_shutdown_internal(state, instance);
@@ -756,12 +756,12 @@ int vchiq_connect(struct vchiq_instance *instance)
 
 	if (mutex_lock_killable(&state->mutex)) {
 		vchiq_log_trace(vchiq_core_log_level, "%s: call to mutex_lock failed", __func__);
-		status = VCHIQ_RETRY;
+		status = -EAGAIN;
 		goto failed;
 	}
 	status = vchiq_connect_internal(state, instance);
 
-	if (status == VCHIQ_SUCCESS)
+	if (!status)
 		instance->connected = 1;
 
 	mutex_unlock(&state->mutex);
@@ -837,7 +837,7 @@ int
 vchiq_bulk_transmit(struct vchiq_instance *instance, unsigned int handle, const void *data,
 		    unsigned int size, void *userdata, enum vchiq_bulk_mode mode)
 {
-	enum vchiq_status status;
+	int status;
 
 	while (1) {
 		switch (mode) {
@@ -857,7 +857,7 @@ vchiq_bulk_transmit(struct vchiq_instance *instance, unsigned int handle, const 
 		}
 
 		/*
-		 * vchiq_*_bulk_transfer() may return VCHIQ_RETRY, so we need
+		 * vchiq_*_bulk_transfer() may return -EAGAIN, so we need
 		 * to implement a retry mechanism since this function is
 		 * supposed to block until queued
 		 */
@@ -895,7 +895,7 @@ vchiq_bulk_receive(struct vchiq_instance *instance, unsigned int handle,
 		}
 
 		/*
-		 * vchiq_*_bulk_transfer() may return VCHIQ_RETRY, so we need
+		 * vchiq_*_bulk_transfer() may return -EAGAIN, so we need
 		 * to implement a retry mechanism since this function is
 		 * supposed to block until queued
 		 */
@@ -1102,7 +1102,7 @@ service_callback(struct vchiq_instance *instance, enum vchiq_reason reason,
 			 */
 			if ((user_service->message_available_pos -
 				instance->completion_remove) < 0) {
-				enum vchiq_status status;
+				int status;
 
 				vchiq_log_info(vchiq_arm_log_level,
 					       "Inserting extra MESSAGE_AVAILABLE");
@@ -1313,7 +1313,7 @@ vchiq_get_state(void)
  * Autosuspend related functionality
  */
 
-static enum vchiq_status
+static int
 vchiq_keepalive_vchiq_callback(struct vchiq_instance *instance,
 			       enum vchiq_reason reason,
 			       struct vchiq_header *header,
@@ -1445,10 +1445,10 @@ vchiq_use_internal(struct vchiq_state *state, struct vchiq_service *service,
 	write_unlock_bh(&arm_state->susp_res_lock);
 
 	if (!ret) {
-		enum vchiq_status status = VCHIQ_SUCCESS;
+		int status = 0;
 		long ack_cnt = atomic_xchg(&arm_state->ka_use_ack_count, 0);
 
-		while (ack_cnt && (status == VCHIQ_SUCCESS)) {
+		while (ack_cnt && (!status)) {
 			/* Send the use notify to videocore */
 			status = vchiq_send_remote_use_active(state);
 			if (!status)

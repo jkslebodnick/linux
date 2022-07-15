@@ -468,7 +468,7 @@ vchiq_add_service_internal(struct vchiq_state *state,
 			   int srvstate, struct vchiq_instance *instance,
 			   void (*userdata_term)(void *userdata));
 
-extern enum vchiq_status
+extern int
 vchiq_open_service_internal(struct vchiq_service *service, int client_id);
 
 extern enum vchiq_status

@@ -190,7 +190,7 @@ static int vchiq_ioc_create_service(struct vchiq_instance *instance,
 
 	if (args->is_open) {
 		status = vchiq_open_service_internal(service, instance->pid);
-		if (status != VCHIQ_SUCCESS) {
+		if (status) {
 			vchiq_remove_service(instance, service->handle);
 			return (status == VCHIQ_RETRY) ?
 				-EINTR : -EIO;

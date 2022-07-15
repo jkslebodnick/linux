@@ -2486,7 +2486,7 @@ vchiq_add_service_internal(struct vchiq_state *state,
 	return service;
 }
 
-enum vchiq_status
+int
 vchiq_open_service_internal(struct vchiq_service *service, int client_id)
 {
 	struct vchiq_open_payload payload = {
@@ -2495,7 +2495,7 @@ vchiq_open_service_internal(struct vchiq_service *service, int client_id)
 		service->version,
 		service->version_min
 	};
-	enum vchiq_status status = VCHIQ_SUCCESS;
+	int status = 0;
 
 	service->client_id = client_id;
 	vchiq_use_service_internal(service);
@@ -2506,12 +2506,12 @@ vchiq_open_service_internal(struct vchiq_service *service, int client_id)
 			       sizeof(payload),
 			       QMFLAGS_IS_BLOCKING);
 
-	if (status != VCHIQ_SUCCESS)
+	if (status)
 		return status;
 
 	/* Wait for the ACK/NAK */
 	if (wait_for_completion_interruptible(&service->remove_event)) {
-		status = VCHIQ_RETRY;
+		status = -EAGAIN;
 		vchiq_release_service_internal(service);
 	} else if ((service->srvstate != VCHIQ_SRVSTATE_OPEN) &&
 		   (service->srvstate != VCHIQ_SRVSTATE_OPENSYNC)) {
@@ -2521,7 +2521,7 @@ vchiq_open_service_internal(struct vchiq_service *service, int client_id)
 					service->state->id,
 					srvstate_names[service->srvstate],
 					kref_read(&service->ref_count));
-		status = VCHIQ_ERROR;
+		status = -EINVAL;
 		VCHIQ_SERVICE_STATS_INC(service, error_count);
 		vchiq_release_service_internal(service);
 	}

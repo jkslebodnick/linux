@@ -801,12 +801,12 @@ vchiq_add_service(struct vchiq_instance *instance,
 	return status;
 }
 
-enum vchiq_status
+int
 vchiq_open_service(struct vchiq_instance *instance,
 		   const struct vchiq_service_params_kernel *params,
 		   unsigned int *phandle)
 {
-	enum vchiq_status   status = VCHIQ_ERROR;
+	int status = -EINVAL;
 	struct vchiq_state   *state = instance->state;
 	struct vchiq_service *service = NULL;
 
@@ -820,7 +820,7 @@ vchiq_open_service(struct vchiq_instance *instance,
 	if (service) {
 		*phandle = service->handle;
 		status = vchiq_open_service_internal(service, current->pid);
-		if (status != VCHIQ_SUCCESS) {
+		if (status) {
 			vchiq_remove_service(instance, service->handle);
 			*phandle = VCHIQ_SERVICE_HANDLE_INVALID;
 		}

@@ -92,8 +92,8 @@ extern int vchiq_connect(struct vchiq_instance *instance);
 extern int vchiq_open_service(struct vchiq_instance *instance,
 			      const struct vchiq_service_params_kernel *params,
 			      unsigned int *pservice);
-extern enum vchiq_status vchiq_close_service(struct vchiq_instance *instance,
-					     unsigned int service);
+extern int vchiq_close_service(struct vchiq_instance *instance,
+			       unsigned int service);
 extern int vchiq_use_service(struct vchiq_instance *instance, unsigned int service);
 extern int vchiq_release_service(struct vchiq_instance *instance,
 				 unsigned int service);

@@ -675,7 +675,7 @@ vchiq_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			status = (cmd == VCHIQ_IOC_CLOSE_SERVICE) ?
 				 vchiq_close_service(instance, service->handle) :
 				 vchiq_remove_service(instance, service->handle);
-			if (status != VCHIQ_SUCCESS)
+			if (status)
 				break;
 		}
 

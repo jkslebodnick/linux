@@ -471,7 +471,7 @@ vchiq_add_service_internal(struct vchiq_state *state,
 extern int
 vchiq_open_service_internal(struct vchiq_service *service, int client_id);
 
-extern enum vchiq_status
+extern int
 vchiq_close_service_internal(struct vchiq_service *service, int close_recvd);
 
 extern void

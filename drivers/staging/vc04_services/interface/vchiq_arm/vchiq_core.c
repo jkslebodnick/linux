@@ -2591,8 +2591,6 @@ release_service_messages(struct vchiq_service *service)
 static int
 do_abort_bulks(struct vchiq_service *service)
 {
-	int status;
-
 	/* Abort any outstanding bulk transfers */
 	if (mutex_lock_killable(&service->bulk_mutex))
 		return 0;
@@ -2600,12 +2598,10 @@ do_abort_bulks(struct vchiq_service *service)
 	abort_outstanding_bulks(service, &service->bulk_rx);
 	mutex_unlock(&service->bulk_mutex);
 
-	status = notify_bulks(service, &service->bulk_tx, NO_RETRY_POLL);
-	if (status)
+	if (notify_bulks(service, &service->bulk_tx, NO_RETRY_POLL))
 		return 0;
 
-	status = notify_bulks(service, &service->bulk_rx, NO_RETRY_POLL);
-	return !status;
+	return !notify_bulks(service, &service->bulk_rx, NO_RETRY_POLL);
 }
 
 static int
